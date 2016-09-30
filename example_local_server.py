@@ -75,7 +75,7 @@ def do_native_app_authentication(client_id, redirect_uri,
     """
     client = NativeAppAuthClient(client_id=client_id)
     client.oauth2_start_flow_native_app(requested_scopes=SCOPES,
-                                        redirect_uri='https://localhost:8000')
+                                        redirect_uri=redirect_uri)
 
     url = client.oauth2_get_authorize_url()
 

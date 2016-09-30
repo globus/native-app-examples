@@ -2,6 +2,10 @@
 Simple code examples for building Native Apps using Globus [Auth](https://docs.globus.org/api/auth/).
 
 ## Overview
+All examples use the Globus Python SDK and the Native App Authorization Flow.
+* `example_copy_paste.py` -- get an access token for Transfer and do an `ls` on an endpoint.
+* `example_copy_paste_refresh_token.py` -- get a refresh token for Transfer and do an `ls` on an endpoint and automatically retrieve a new access token when necessary.
+* `example_local_server.py` -- demonstrate how an app could use a local web server to automatically receive the "auth code."
 
 ## Getting Started
 * Set up your environment.

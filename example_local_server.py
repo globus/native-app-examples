@@ -96,7 +96,7 @@ def do_native_app_authentication(client_id, redirect_uri,
 
 
 def main():
-    # if we need to get tokens, start the Native App authentication process
+    # start the Native App authentication process
     tokens = do_native_app_authentication(CLIENT_ID, REDIRECT_URI)
 
     transfer_token = tokens['transfer.api.globus.org']['access_token']

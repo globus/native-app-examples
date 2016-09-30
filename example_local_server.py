@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import Queue
 import ssl
 import sys
 import threading
@@ -10,6 +9,11 @@ try:
     from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 except ImportError:
     from http.server import HTTPServer, BaseHTTPRequestHandler
+
+try:
+    import Queue
+except ImportError:
+    import queue as Queue
 
 try:
     from urlparse import urlparse, parse_qs
@@ -40,7 +44,7 @@ class RedirectHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
-            self.wfile.write('You\'re all set, you can close this window!')
+            self.wfile.write(b'You\'re all set, you can close this window!')
 
             code = parse_qs(urlparse(self.path).query).get('code', [''])[0]
             auth_code_queue.put_nowait(code)

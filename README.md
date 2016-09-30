@@ -1,4 +1,4 @@
-# Native App Example
+# Native App Examples
 Simple code examples for building Native Apps using Globus [Auth](https://docs.globus.org/api/auth/).
 
 ## Overview

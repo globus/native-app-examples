@@ -20,7 +20,7 @@ try:
 except ImportError:
     from urllib.parse import urlparse, parse_qs
 
-# from utils import enable_requests_logging
+from utils import enable_requests_logging
 
 from globus_sdk import (NativeAppAuthClient, TransferClient,
                         AccessTokenAuthorizer)
@@ -35,7 +35,8 @@ TUTORIAL_ENDPOINT_ID = 'ddb59aef-6d04-11e5-ba46-22000b92c6ec'
 
 auth_code_queue = Queue.Queue()
 
-get_input = getattr(__builtins__, 'raw_input', input)
+# uncomment the next line to enable debug logging for network requests
+# enable_requests_logging()
 
 
 class RedirectHandler(BaseHTTPRequestHandler):

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import ssl
-import sys
 import threading
 import webbrowser
 
@@ -59,11 +58,8 @@ def start_local_server(listen=('127.0.0.1', 8000)):
     server.socket = ssl.wrap_socket(
         server.socket, certfile='./ssl/server.pem', server_side=True)
     thread = threading.Thread(target=server.serve_forever)
-    try:
-        thread.start()
-    except KeyboardInterrupt:
-        server.shutdown()
-        sys.exit(0)
+    thread.daemon = True
+    thread.start()
 
     return server
 
@@ -84,11 +80,7 @@ def do_native_app_authentication(client_id, redirect_uri,
     webbrowser.open(url, new=1)
 
     auth_code = auth_code_queue.get(block=True)
-    try:
-        token_response = client.oauth2_exchange_code_for_tokens(auth_code)
-    except:
-        server.shutdown()
-        sys.exit(1)
+    token_response = client.oauth2_exchange_code_for_tokens(auth_code)
 
     server.shutdown()
 

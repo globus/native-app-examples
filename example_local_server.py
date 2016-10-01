@@ -1,29 +1,11 @@
 #!/usr/bin/env python
 
-import ssl
-import threading
 import webbrowser
 
-try:
-    from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-except ImportError:
-    from http.server import HTTPServer, BaseHTTPRequestHandler
-
-try:
-    import Queue
-except ImportError:
-    import queue as Queue
-
-try:
-    from urlparse import urlparse, parse_qs
-except ImportError:
-    from urllib.parse import urlparse, parse_qs
-
-from utils import enable_requests_logging
+from utils import start_local_server
 
 from globus_sdk import (NativeAppAuthClient, TransferClient,
                         AccessTokenAuthorizer)
-
 
 CLIENT_ID = '1b0dc9d3-0a2b-4000-8bd6-90fb6a79be86'
 REDIRECT_URI = 'https://localhost:8000'
@@ -32,36 +14,7 @@ SCOPES = ('openid email profile '
 
 TUTORIAL_ENDPOINT_ID = 'ddb59aef-6d04-11e5-ba46-22000b92c6ec'
 
-auth_code_queue = Queue.Queue()
-
-# uncomment the next line to enable debug logging for network requests
-# enable_requests_logging()
-
-
-class RedirectHandler(BaseHTTPRequestHandler):
-
-        def do_GET(self):
-            self.send_response(200)
-            self.send_header('Content-type', 'text/html')
-            self.end_headers()
-            self.wfile.write(b'You\'re all set, you can close this window!')
-
-            code = parse_qs(urlparse(self.path).query).get('code', [''])[0]
-            auth_code_queue.put_nowait(code)
-
-        def log_message(self, format, *args):
-            return
-
-
-def start_local_server(listen=('127.0.0.1', 8000)):
-    server = HTTPServer(listen, RedirectHandler)
-    server.socket = ssl.wrap_socket(
-        server.socket, certfile='./ssl/server.pem', server_side=True)
-    thread = threading.Thread(target=server.serve_forever)
-    thread.daemon = True
-    thread.start()
-
-    return server
+SERVER_ADDRESS = ('127.0.0.1', 8000)
 
 
 def do_native_app_authentication(client_id, redirect_uri,
@@ -73,13 +26,13 @@ def do_native_app_authentication(client_id, redirect_uri,
     client = NativeAppAuthClient(client_id=client_id)
     client.oauth2_start_flow_native_app(requested_scopes=SCOPES,
                                         redirect_uri=redirect_uri)
-
     url = client.oauth2_get_authorize_url()
 
-    server = start_local_server()
+    server = start_local_server(listen=SERVER_ADDRESS)
+
     webbrowser.open(url, new=1)
 
-    auth_code = auth_code_queue.get(block=True)
+    auth_code = server.wait_for_code()
     token_response = client.oauth2_exchange_code_for_tokens(auth_code)
 
     server.shutdown()

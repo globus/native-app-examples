@@ -46,7 +46,7 @@ def do_native_app_authentication(client_id, redirect_uri,
     """
     client = NativeAppAuthClient(client_id=client_id)
     # pass refresh_tokens=True to request refresh tokens
-    client.oauth2_start_flow_native_app(requested_scopes=SCOPES,
+    client.oauth2_start_flow_native_app(requested_scopes=requested_scopes,
                                         refresh_tokens=True)
 
     url = client.oauth2_get_authorize_url()
@@ -73,7 +73,7 @@ def main():
 
     if not tokens:
         # if we need to get tokens, start the Native App authentication process
-        tokens = do_native_app_authentication(CLIENT_ID, REDIRECT_URI)
+        tokens = do_native_app_authentication(CLIENT_ID, REDIRECT_URI, SCOPES)
 
         try:
             save_tokens_to_file(TOKEN_FILE, tokens)

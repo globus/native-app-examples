@@ -8,7 +8,7 @@ from globus_sdk import (NativeAppAuthClient, TransferClient,
                         AccessTokenAuthorizer)
 
 CLIENT_ID = '1b0dc9d3-0a2b-4000-8bd6-90fb6a79be86'
-REDIRECT_URI = 'https://localhost:8000'
+REDIRECT_URI = 'http://localhost:8000'
 SCOPES = ('openid email profile '
           'urn:globus:auth:scope:transfer.api.globus.org:all')
 

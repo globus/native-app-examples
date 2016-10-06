@@ -50,13 +50,14 @@ class RedirectHandler(BaseHTTPRequestHandler):
 
 class RedirectHTTPServer(HTTPServer, object):
 
-    def __init__(self, listen, handler_class):
+    def __init__(self, listen, handler_class, https=False):
         super(RedirectHTTPServer, self).__init__(listen, handler_class)
 
         self._auth_code_queue = Queue.Queue()
 
-        self.socket = ssl.wrap_socket(
-            self.socket, certfile='./ssl/server.pem', server_side=True)
+        if https:
+            self.socket = ssl.wrap_socket(
+                self.socket, certfile='./ssl/server.pem', server_side=True)
 
     def return_code(self, code):
         self._auth_code_queue.put_nowait(code)

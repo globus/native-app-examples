@@ -15,7 +15,7 @@ All examples use the Globus Python SDK and the Native App Authorization Flow.
 * Create your own Native App registration for use with the examples. Visit the [Globus Developer Pages](https://developers.globus.org) to register an App.
     * When registering the App you'll be asked for some information, including the redirect URL and any scopes you will be requesting.
         * Check the "will be used by a native application checkbox"
-        * Redirect URL: `https://auth.globus.org/v2/web/auth-code` and `https://localhost:8000`
+        * Redirect URL: `https://auth.globus.org/v2/web/auth-code` and `http://localhost:8000`
         * Scopes: `urn:globus:auth:scope:transfer.api.globus.org:all`, `openid`, `profile`, `email`
 
 ### OS X

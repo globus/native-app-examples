@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import json
-import time
 import webbrowser
 
 from utils import enable_requests_logging
@@ -11,7 +9,6 @@ from globus_sdk import (NativeAppAuthClient, TransferClient,
 
 
 CLIENT_ID = '1b0dc9d3-0a2b-4000-8bd6-90fb6a79be86'
-TOKEN_FILE = 'tokens.json'
 REDIRECT_URI = 'https://auth.globus.org/v2/web/auth-code'
 SCOPES = ('openid email profile '
           'urn:globus:auth:scope:transfer.api.globus.org:all')
@@ -22,30 +19,6 @@ get_input = getattr(__builtins__, 'raw_input', input)
 
 # uncomment the next line to enable debug logging for network requests
 # enable_requests_logging()
-
-
-def load_tokens_from_file(filepath):
-    """Load a set of saved tokens."""
-    with open(filepath, 'r') as f:
-        tokens = json.load(f)
-
-    return None if expired(tokens) else tokens
-
-
-def save_tokens_to_file(filepath, tokens):
-    """Save a set of tokens for later use."""
-    with open(filepath, 'w') as f:
-        json.dump(tokens, f)
-
-
-def expired(tokens):
-    """Check a set of tokens and return True if any have expired."""
-    threshold = time.time() + 60
-    for _, token in tokens.items():
-        if threshold > token['expires_at_seconds']:
-            return True
-
-    return False
 
 
 def do_native_app_authentication(client_id, redirect_uri,
@@ -72,21 +45,8 @@ def do_native_app_authentication(client_id, redirect_uri,
 
 
 def main():
-    tokens = None
-    try:
-        # if we already have tokens, load and use them
-        tokens = load_tokens_from_file(TOKEN_FILE)
-    except:
-        pass
-
-    if not tokens:
-        # if we need to get tokens, start the Native App authentication process
-        tokens = do_native_app_authentication(CLIENT_ID, REDIRECT_URI)
-
-        try:
-            save_tokens_to_file(TOKEN_FILE, tokens)
-        except:
-            pass
+    # start the Native App authentication process
+    tokens = do_native_app_authentication(CLIENT_ID, REDIRECT_URI)
 
     transfer_token = tokens['transfer.api.globus.org']['access_token']
 

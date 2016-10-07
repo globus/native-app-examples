@@ -81,21 +81,14 @@ def main():
             pass
 
     transfer_tokens = tokens['transfer.api.globus.org']
+
     auth_client = NativeAppAuthClient(client_id=CLIENT_ID)
-    if transfer_tokens['expires_at_seconds'] > time.time() - 60:
-        # access token is still valid so we can use it to make
-        # requests instead of requesting a new one right away
-        authorizer = RefreshTokenAuthorizer(
-            transfer_tokens['refresh_token'],
-            auth_client,
-            access_token=transfer_tokens['access_token'],
-            expires_at=transfer_tokens['expires_at_seconds'])
-    else:
-        # access token has expired, so we'll have the RefreshTokenAuthorizer
-        # request a new one right away
-        authorizer = RefreshTokenAuthorizer(
-            transfer_tokens['refresh_token'],
-            auth_client)
+
+    authorizer = RefreshTokenAuthorizer(
+        transfer_tokens['refresh_token'],
+        auth_client,
+        access_token=transfer_tokens['access_token'],
+        expires_at=transfer_tokens['expires_at_seconds'])
 
     transfer = TransferClient(authorizer=authorizer)
 

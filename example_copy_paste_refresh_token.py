@@ -4,7 +4,7 @@ import json
 import time
 import webbrowser
 
-from utils import enable_requests_logging
+from utils import enable_requests_logging, is_remote_session
 
 from globus_sdk import (NativeAppAuthClient, TransferClient,
                         RefreshTokenAuthorizer)
@@ -53,7 +53,8 @@ def do_native_app_authentication(client_id, redirect_uri,
 
     print('Native App Authorization URL: \n{}'.format(url))
 
-    webbrowser.open(url, new=1)
+    if not is_remote_session():
+        webbrowser.open(url, new=1)
 
     auth_code = get_input('Enter the auth code: ').strip()
 

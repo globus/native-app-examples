@@ -2,7 +2,7 @@
 
 import webbrowser
 
-from utils import start_local_server
+from utils import start_local_server, is_remote_session
 
 from globus_sdk import (NativeAppAuthClient, TransferClient,
                         AccessTokenAuthorizer)
@@ -30,7 +30,8 @@ def do_native_app_authentication(client_id, redirect_uri,
 
     server = start_local_server(listen=SERVER_ADDRESS)
 
-    webbrowser.open(url, new=1)
+    if not is_remote_session():
+        webbrowser.open(url, new=1)
 
     auth_code = server.wait_for_code()
     token_response = client.oauth2_exchange_code_for_tokens(auth_code)
@@ -57,4 +58,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    if not is_remote_session():
+        main()
+    else:
+        print('This example does not work on a remote session.')

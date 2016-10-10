@@ -1,4 +1,5 @@
 import logging
+import os
 import ssl
 import threading
 
@@ -31,6 +32,10 @@ def enable_requests_logging():
     requests_log = logging.getLogger('requests.packages.urllib3')
     requests_log.setLevel(logging.DEBUG)
     requests_log.propagate = True
+
+
+def is_remote_session():
+    return os.environ.get('SSH_TTY', os.environ.get('SSH_CONNECTION'))
 
 
 class RedirectHandler(BaseHTTPRequestHandler):

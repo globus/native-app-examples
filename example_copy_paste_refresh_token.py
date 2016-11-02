@@ -10,7 +10,7 @@ from globus_sdk import (NativeAppAuthClient, TransferClient,
                         RefreshTokenAuthorizer)
 
 
-CLIENT_ID = '1b0dc9d3-0a2b-4000-8bd6-90fb6a79be86'
+CLIENT_ID = '079bdf4e-9666-4816-ac01-7eab9dc82b93'
 TOKEN_FILE = 'refresh-tokens.json'
 REDIRECT_URI = 'https://auth.globus.org/v2/web/auth-code'
 SCOPES = ('openid email profile '

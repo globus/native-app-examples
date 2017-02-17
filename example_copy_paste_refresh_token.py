@@ -47,6 +47,7 @@ def do_native_app_authentication(client_id, redirect_uri,
     client = NativeAppAuthClient(client_id=client_id)
     # pass refresh_tokens=True to request refresh tokens
     client.oauth2_start_flow_native_app(requested_scopes=requested_scopes,
+                                        redirect_uri=redirect_uri,
                                         refresh_tokens=True)
 
     url = client.oauth2_get_authorize_url()

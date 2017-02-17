@@ -2,12 +2,14 @@
 
 import json
 import time
+import sys
 import webbrowser
 
 from utils import enable_requests_logging, is_remote_session
 
 from globus_sdk import (NativeAppAuthClient, TransferClient,
                         RefreshTokenAuthorizer)
+from globus_sdk.exc import GlobusAPIError
 
 
 CLIENT_ID = '079bdf4e-9666-4816-ac01-7eab9dc82b93'
@@ -95,7 +97,15 @@ def main():
     transfer = TransferClient(authorizer=authorizer)
 
     # print out a directory listing from an endpoint
-    transfer.endpoint_autoactivate(TUTORIAL_ENDPOINT_ID)
+    try:
+        transfer.endpoint_autoactivate(TUTORIAL_ENDPOINT_ID)
+    except GlobusAPIError as ex:
+        if ex.http_status == 401:
+            sys.exit('Refresh token has expired. '
+                     'Please delete refresh-tokens.json and try again.')
+        else:
+            raise ex
+
     for entry in transfer.operation_ls(TUTORIAL_ENDPOINT_ID, path='/~/'):
         print(entry['name'] + ('/' if entry['type'] == 'dir' else ''))
 

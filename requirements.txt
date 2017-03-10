@@ -1,1 +1,1 @@
-globus-sdk==0.5.0
+globus-sdk==0.5.1

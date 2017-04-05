@@ -40,6 +40,14 @@ def save_tokens_to_file(filepath, tokens):
         json.dump(tokens, f)
 
 
+def update_tokens_file_on_refresh(token_response):
+    """
+    Callback function passed into the RefreshTokenAuthorizer.
+    Will be invoked any time a new access token is fetched.
+    """
+    save_tokens_to_file(TOKEN_FILE, token_response.by_resource_server)
+
+
 def do_native_app_authentication(client_id, redirect_uri,
                                  requested_scopes=None):
     """
@@ -92,7 +100,8 @@ def main():
         transfer_tokens['refresh_token'],
         auth_client,
         access_token=transfer_tokens['access_token'],
-        expires_at=transfer_tokens['expires_at_seconds'])
+        expires_at=transfer_tokens['expires_at_seconds'],
+        on_refresh=update_tokens_file_on_refresh)
 
     transfer = TransferClient(authorizer=authorizer)
 
@@ -115,6 +124,10 @@ def main():
     auth_client.oauth2_revoke_token(authorizer.access_token)
     # Allow a little bit of time for the token revocation to settle
     time.sleep(1)
+    # Verify that the access token is no longer valid
+    token_status = auth_client.oauth2_validate_token(
+        transfer_tokens['access_token'])
+    assert token_status['active'] is False, 'Token was expected to be invalid.'
 
     print('\nDoing a second directory listing with a new access token:')
     for entry in transfer.operation_ls(TUTORIAL_ENDPOINT_ID, path='/~/'):

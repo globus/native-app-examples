@@ -109,6 +109,7 @@ def main():
     try:
         transfer.endpoint_autoactivate(TUTORIAL_ENDPOINT_ID)
     except GlobusAPIError as ex:
+        print(ex)
         if ex.http_status == 401:
             sys.exit('Refresh token has expired. '
                      'Please delete refresh-tokens.json and try again.')

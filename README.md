@@ -22,8 +22,7 @@ All examples use the Globus Python SDK and the Native App Authorization Flow.
 
 ##### Environment Setup
 
-* `sudo easy_install pip`
-* `sudo pip install virtualenv`
+* Install python3
 * `git clone https://github.com/globus/native-app-examples`
 * `cd native-app-examples`
 * `virtualenv venv`
@@ -35,7 +34,7 @@ All examples use the Globus Python SDK and the Native App Authorization Flow.
 ##### Environment Setup
 
 * `sudo apt-get update`
-* `sudo apt-get install python-pip`
+* `sudo apt-get install python3-pip`
 * `sudo pip install virtualenv`
 * `sudo apt-get install git`
 * `git clone https://github.com/globus/native-app-examples`
